@@ -1,36 +1,79 @@
 <?php 
-include_once("php/db_connect.php");
+/**
+ * Landing Page (Headspace Style - Arabic)
+ * Patient Queue Management System
+ */
+require_once __DIR__ . "/vendor/autoload.php";
+$pageTitle = "الرئيسية";
+$bodyClass = "landing-page";
+include_once __DIR__ . "/includes/header.php";
+include_once __DIR__ . "/includes/navbar.php";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PQMS - Patient Queue Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-</head>
-<body class="landing-page">
-    <div class="container">
-        <div class="row align-items-center min-vh-100">
-            <div class="col-md-6">
-                <div class="text-center text-md-start">
-                    <h1 class="display-4 fw-bold mb-3">Clinic Patient Queue Management System</h1>
-                    <p class="lead mb-4">Streamline patient flow, reduce wait times, and improve clinic efficiency with our digital queue management solution.</p>
-                    <div class="d-flex gap-3 justify-content-center justify-content-md-start">
-                        <a href="visit.php" class="btn btn-primary btn-lg px-4">Patient Check-In</a>
-                        <a href="login.php" class="btn btn-outline-primary btn-lg px-4">Staff Login</a>
-                    </div>
+
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-4 my-2">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="text-center text-lg-start">
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill mb-3 fw-bold">
+                    <span class="brand-dot ms-1"></span> منظومة الرعاية الصحية الهادئة
+                </span>
+                <h1 class="display-4 fw-bold mb-3" style="letter-spacing: -1.5px;">
+                    نظام إدارة طوابير وحجوزات المرضى
+                </h1>
+                <p class="lead mb-4 fs-5" style="color: var(--color-graphite);">
+                    تنظيم انسيابي ومريح لحركة المراجعين في العيادات والمراكز الصحية، لتقليل التوتر وفترات الانتظار، مع واجهات تفاعلية مريحة للعين.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="pages/visit.php" class="btn btn-primary btn-lg px-4 shadow-sm">
+                        <i class="bi bi-person-check ms-2"></i> تسجيل حضور مريض
+                    </a>
+                    <a href="pages/appointments.php" class="btn btn-dark btn-lg px-4">
+                        <i class="bi bi-calendar-check ms-2"></i> حجز موعد مسبق
+                    </a>
+                    <a href="pages/queue.php" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="bi bi-tv ms-2"></i> شاشة صالة الانتظار
+                    </a>
                 </div>
             </div>
-            <div class="col-md-6 d-none d-md-block">
-                <img src="https://via.placeholder.com/600x400" alt="Clinic illustration" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-lg-6 text-center">
+            <div class="p-2">
+                <img src="images/profile.png" alt="إدارة طوابير المرضى" class="img-fluid rounded-4 shadow-sm border" style="max-height: 400px; object-fit: cover; border-color: var(--color-linen) !important;">
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
-</body>
-</html>
+    <!-- Feature Cards Band -->
+    <div class="row g-4 mt-4 pt-4 border-top" style="border-color: var(--color-linen) !important;">
+        <div class="col-md-4">
+            <div class="card h-100 p-3">
+                <div class="card-body">
+                    <div class="fs-1 mb-3 text-primary"><i class="bi bi-qr-code-scan"></i></div>
+                    <h5 class="fw-bold mb-2">خدمة ذاتية سلسة</h5>
+                    <p class="text-muted mb-0 small">استخراج فوري لتذاكر الطابور للمواعيد المسبقة أو الحضور المباشر دون الوقوف في طوابير الاستقبال.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-3 card-yellow">
+                <div class="card-body">
+                    <div class="fs-1 mb-3" style="color: var(--color-deep-indigo);"><i class="bi bi-broadcast"></i></div>
+                    <h5 class="fw-bold mb-2" style="color: var(--color-charcoal-ink);">شاشة انتظار هادئة وواضحة</h5>
+                    <p class="mb-0 small" style="color: var(--color-graphite);">عرض رقم المريض المستدعى ورقم العيادة واسم الطبيب المعالج مع تنبيه صوتي وتحديث لحظي.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-3">
+                <div class="card-body">
+                    <div class="fs-1 mb-3 text-dark"><i class="bi bi-person-badge"></i></div>
+                    <h5 class="fw-bold mb-2">مساحة عمل الطبيب</h5>
+                    <p class="text-muted mb-0 small">مناداة المريض القادم بنقرة واحدة وتحديد غرفة الاستشارة ومتابعة حالة طابور الكشف اليومي.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include_once __DIR__ . "/includes/footer.php"; ?>

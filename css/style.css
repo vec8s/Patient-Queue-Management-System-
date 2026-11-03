@@ -1,221 +1,945 @@
-/* General Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
+/**
+ * Headspace Design System — Complete CSS Implementation
+ * Theme: Sunlit wellness retreat on warm paper
+ * Patient Queue Management System (PQS)
+ */
+
+:root {
+  /* -------------------------------------------------------------------------
+     Colors
+     ------------------------------------------------------------------------- */
+  --color-page-cream: #f9f4f2;
+  --color-pure-white: #ffffff;
+  --color-charcoal-ink: #2d2c2b;
+  --color-graphite: #44423f;
+  --color-slate: #4b4c4d;
+  --color-stone: #63605d;
+  --color-driftwood: #c6c1b9;
+  --color-linen: #e2ded9;
+  --color-ash: #d0d0d0;
+  --color-soft-black: #000000;
+  --color-brand-orange: #f47d31;
+  --color-mindful-blue: #0061ef;
+  --color-sunbeam-yellow: #ffce00;
+  --color-deep-indigo: #3b197f;
+  --color-twilight-violet: #281466;
+  --color-plum: #5f2b89;
+  --color-mauve: #8144a8;
+  --color-celeste: #00a4ff;
+  --color-blush: #ffa1cc;
+
+  /* -------------------------------------------------------------------------
+     Typography — Font Families
+     ------------------------------------------------------------------------- */
+  --font-headspace-apercu: 'Cairo', 'Headspace Apercu', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* -------------------------------------------------------------------------
+     Typography — Scale
+     ------------------------------------------------------------------------- */
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --tracking-caption: -0.12px;
+
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.5;
+  --tracking-body-sm: -0.14px;
+
+  --text-body: 16px;
+  --leading-body: 1.5;
+  --tracking-body: -0.16px;
+
+  --text-subheading: 20px;
+  --leading-subheading: 1.33;
+  --tracking-subheading: -0.5px;
+
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 1.33;
+  --tracking-heading-sm: -0.6px;
+
+  --text-heading: 32px;
+  --leading-heading: 1.3;
+  --tracking-heading: -0.8px;
+
+  --text-heading-lg: 40px;
+  --leading-heading-lg: 1.29;
+  --tracking-heading-lg: -1px;
+
+  --text-display: 52px;
+  --leading-display: 1.13;
+  --tracking-display: -1.56px;
+
+  --text-display-lg: 72px;
+  --leading-display-lg: 1.1;
+  --tracking-display-lg: -2.16px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* -------------------------------------------------------------------------
+     Spacing
+     ------------------------------------------------------------------------- */
+  --spacing-unit: 4px;
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-84: 84px;
+  --spacing-96: 96px;
+  --spacing-100: 100px;
+
+  /* -------------------------------------------------------------------------
+     Layout
+     ------------------------------------------------------------------------- */
+  --page-max-width: 1200px;
+  --section-gap: 64px;
+  --card-padding: 32px;
+  --card-padding-lg: 48px;
+  --element-gap: 12px;
+
+  /* -------------------------------------------------------------------------
+     Border Radius
+     ------------------------------------------------------------------------- */
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-3xl-2: 32px;
+  --radius-full: 112px;
+  --radius-full-2: 800px;
+
+  /* Named Radii */
+  --radius-cards: 16px;
+  --radius-pills: 800px;
+  --radius-small: 8px;
+  --radius-inputs: 8px;
+  --radius-buttons: 800px;
+  --radius-featured: 32px;
+
+  /* -------------------------------------------------------------------------
+     Shadows
+     ------------------------------------------------------------------------- */
+  --shadow-subtle: rgba(65, 61, 69, 0.2) 0px 2px 0px 0px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 12px 32px rgba(45, 44, 43, 0.08);
+
+  /* -------------------------------------------------------------------------
+     Surfaces
+     ------------------------------------------------------------------------- */
+  --surface-page-cream: #f9f4f2;
+  --surface-pure-white: #ffffff;
+  --surface-sunbeam-yellow: #ffce00;
+  --surface-blush: #ffa1cc;
+  --surface-celeste: #00a4ff;
 }
 
-.landing-page {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+/* ==========================================================================
+   1. Base & Global Styles
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* Navbar */
+html, body {
+  background-color: var(--color-page-cream) !important;
+  color: var(--color-charcoal-ink);
+  font-family: var(--font-headspace-apercu);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Typography Hierarchy */
+h1, .text-heading-lg {
+  font-size: var(--text-heading-lg);
+  line-height: var(--leading-heading-lg);
+  letter-spacing: var(--tracking-heading-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-charcoal-ink);
+}
+
+h2, .text-heading {
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-charcoal-ink);
+}
+
+h3, .text-heading-sm {
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  letter-spacing: var(--tracking-heading-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-charcoal-ink);
+}
+
+h4, .text-subheading {
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-subheading);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-charcoal-ink);
+}
+
+.text-display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-soft-black);
+}
+
+.text-display-lg {
+  font-size: var(--text-display-lg);
+  line-height: var(--leading-display-lg);
+  letter-spacing: var(--tracking-display-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-soft-black);
+}
+
+p, .text-body {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  color: var(--color-graphite);
+}
+
+.text-body-sm {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+  color: var(--color-graphite);
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-slate);
+}
+
+.text-muted {
+  color: var(--color-stone) !important;
+}
+
+a {
+  color: var(--color-mindful-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #0052cc;
+}
+
+/* ==========================================================================
+   2. Brand Signature Elements
+   ========================================================================== */
+/* Orange Logo Dot */
+.brand-dot {
+  width: 14px;
+  height: 14px;
+  background-color: var(--color-brand-orange);
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Yellow Announcement Banner */
+.headspace-announcement {
+  background-color: var(--color-sunbeam-yellow);
+  color: var(--color-charcoal-ink);
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-12) var(--spacing-20);
+  text-align: center;
+  border-bottom: 1px solid rgba(45, 44, 43, 0.08);
+  width: 100%;
+}
+
+/* ==========================================================================
+   3. Navigation Bar
+   ========================================================================== */
 .navbar {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-pure-white) !important;
+  border-bottom: 1px solid var(--color-linen) !important;
+  box-shadow: none !important;
+  padding-top: var(--spacing-16);
+  padding-bottom: var(--spacing-16);
 }
 
-/* Cards */
-.card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.navbar .container {
+  max-width: var(--page-max-width);
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+.navbar-brand {
+  color: var(--color-charcoal-ink) !important;
+  font-weight: var(--font-weight-bold);
+  font-size: 1.2rem;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
 }
 
-.card-header {
-    border-radius: 10px 10px 0 0 !important;
+.nav-link {
+  color: var(--color-graphite) !important;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-body);
+  padding: var(--spacing-8) var(--spacing-16) !important;
+  border-radius: var(--radius-pills);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Queue Display */
-.queue-display {
-    background-color: #f8f9fa;
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-charcoal-ink) !important;
+  background-color: var(--color-page-cream);
 }
 
-.current-patient-section {
-    background-color: #0d6efd;
-    color: white;
-    height: 100vh;
-}
-
-.current-patient-card {
-    background-color: white;
-    border-radius: 10px;
-    color: #333;
-    margin: 0 auto;
-    max-width: 600px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.upcoming-queue-section {
-    background-color: white;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.queue-number {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #0d6efd;
-    background-color: rgba(13, 110, 253, 0.1);
-    display: inline-block;
-    padding: 0.5rem 2rem;
-    border-radius: 50px;
-}
-
-.queue-number-lg {
-    font-size: 5rem;
-    font-weight: bold;
-    color: #0d6efd;
-}
-
-.queue-number-sm {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #0d6efd;
-    background-color: rgba(13, 110, 253, 0.1);
-    display: inline-block;
-    padding: 0.2rem 1rem;
-    border-radius: 50px;
-    min-width: 60px;
-    text-align: center;
-}
-
-.patient-name {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-}
-
-.patient-info {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.upcoming-list {
-    list-style: none;
-    padding: 0;
-}
-
-.upcoming-item {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s;
-}
-
-.upcoming-item:hover {
-    background-color: #f8f9fa;
-}
-
-.patient-details {
-    flex-grow: 1;
-}
-
-.appointment-time {
-    color: #6c757d;
-    font-size: 0.9rem;
-}
-
-/* Admin Cards */
-.admin-card {
-    text-align: center;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
-
-.admin-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.icon-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-}
-
-/* System Status */
-.system-status-item {
-    padding: 0.5rem 0;
-    display: flex;
-    align-items: center;
-}
-
-/* Forms */
-.form-control, .form-select {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #ced4da;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-/* Buttons */
+/* ==========================================================================
+   4. Buttons & CTAs (Headspace Pill Styling)
+   ========================================================================== */
 .btn {
-    border-radius: 8px;
-    padding: 0.5rem 1.25rem;
-    font-weight: 500;
+  border-radius: var(--radius-buttons) !important;
+  font-weight: var(--font-weight-bold);
+  padding: 12px 24px;
+  font-size: var(--text-body);
+  letter-spacing: -0.2px;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Primary Mindful Blue Pill (Single highest-priority action) */
 .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+  background-color: var(--color-mindful-blue) !important;
+  color: var(--color-pure-white) !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .btn-primary:hover {
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
+  background-color: #0052cc !important;
+  color: var(--color-pure-white) !important;
+  transform: translateY(-1px);
 }
 
-/* Modal */
+/* Dark Pill Button (Sticker depth cue with 2px offset shadow) */
+.btn-dark,
+.btn-secondary,
+.btn-dark-pill {
+  background-color: var(--color-charcoal-ink) !important;
+  color: var(--color-pure-white) !important;
+  border: none !important;
+  box-shadow: var(--shadow-subtle) !important;
+}
+
+.btn-dark:hover,
+.btn-secondary:hover,
+.btn-dark-pill:hover {
+  background-color: var(--color-soft-black) !important;
+  color: var(--color-pure-white) !important;
+  transform: translateY(-1px);
+}
+
+/* Outline Buttons */
+.btn-outline-primary {
+  background-color: transparent !important;
+  color: var(--color-charcoal-ink) !important;
+  border: 1px solid var(--color-linen) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--color-pure-white) !important;
+  border-color: var(--color-charcoal-ink) !important;
+  color: var(--color-charcoal-ink) !important;
+  transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+  background-color: transparent !important;
+  color: var(--color-graphite) !important;
+  border: 1px solid var(--color-linen) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--color-pure-white) !important;
+  color: var(--color-charcoal-ink) !important;
+}
+
+/* Light Button */
+.btn-light {
+  background-color: var(--color-pure-white) !important;
+  color: var(--color-charcoal-ink) !important;
+  border: 1px solid var(--color-linen) !important;
+}
+
+.btn-light:hover {
+  background-color: var(--color-page-cream) !important;
+  border-color: var(--color-driftwood) !important;
+}
+
+/* Button Sizing */
+.btn-lg {
+  padding: 14px 28px !important;
+  font-size: var(--text-body) !important;
+}
+
+.btn-sm {
+  padding: 8px 18px !important;
+  font-size: var(--text-body-sm) !important;
+}
+
+/* ==========================================================================
+   5. Cards & Surfaces
+   ========================================================================== */
+.card {
+  background-color: var(--color-pure-white) !important;
+  border: 1px solid var(--color-linen) !important;
+  border-radius: var(--radius-cards) !important;
+  box-shadow: var(--shadow-card) !important;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hero Feature Card & Featured 24-32px containers */
+.hero-feature-card,
+.card-featured,
+.rounded-4 {
+  border-radius: var(--radius-featured) !important;
+}
+
+.hero-feature-card {
+  background-color: var(--color-pure-white);
+  border: 1px solid var(--color-linen);
+  padding: var(--card-padding-lg);
+  border-radius: var(--radius-featured);
+}
+
+.card-header {
+  background-color: var(--color-pure-white) !important;
+  border-bottom: 1px solid var(--color-linen) !important;
+  color: var(--color-charcoal-ink) !important;
+  padding: var(--spacing-20) var(--spacing-24);
+}
+
+.card-body {
+  padding: var(--card-padding);
+}
+
+.card-footer {
+  background-color: var(--color-page-cream) !important;
+  border-top: 1px solid var(--color-linen) !important;
+  color: var(--color-graphite) !important;
+  padding: var(--spacing-16) var(--spacing-24);
+}
+
+/* Feature Colored Surface Cards */
+.card-sunbeam,
+.card-yellow {
+  background-color: var(--color-sunbeam-yellow) !important;
+  border: none !important;
+  border-radius: var(--radius-featured) !important;
+  color: var(--color-charcoal-ink) !important;
+}
+
+.card-blush {
+  background-color: var(--color-blush) !important;
+  border: none !important;
+  border-radius: var(--radius-featured) !important;
+  color: var(--color-charcoal-ink) !important;
+}
+
+.card-celeste {
+  background-color: var(--color-celeste) !important;
+  border: none !important;
+  border-radius: var(--radius-featured) !important;
+  color: var(--color-charcoal-ink) !important;
+}
+
+.card-deep-indigo,
+.card-indigo {
+  background-color: var(--color-deep-indigo) !important;
+  border: none !important;
+  border-radius: var(--radius-featured) !important;
+  color: var(--color-pure-white) !important;
+}
+
+.card-deep-indigo h1,
+.card-deep-indigo h2,
+.card-deep-indigo h3,
+.card-deep-indigo h4,
+.card-deep-indigo p,
+.card-indigo h1,
+.card-indigo h2,
+.card-indigo h3,
+.card-indigo h4,
+.card-indigo p {
+  color: var(--color-pure-white) !important;
+}
+
+/* ==========================================================================
+   6. Category Cards (Topic Navigation Tiles)
+   ========================================================================== */
+.category-card {
+  background-color: var(--color-pure-white);
+  border: 1px solid var(--color-linen);
+  border-radius: var(--radius-cards);
+  padding: var(--spacing-20) var(--spacing-24);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  color: var(--color-charcoal-ink);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-driftwood);
+  box-shadow: 0 4px 12px rgba(45, 44, 43, 0.05);
+  color: var(--color-charcoal-ink);
+}
+
+.category-card .category-label {
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-charcoal-ink);
+}
+
+.category-card .category-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.category-card .category-chevron {
+  color: var(--color-graphite);
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   7. Filter Pills (Section Tabs)
+   ========================================================================== */
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  background-color: var(--color-pure-white);
+  color: var(--color-charcoal-ink);
+  border: 1px solid var(--color-linen);
+  border-radius: var(--radius-pills);
+  padding: 12px 20px;
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  background-color: var(--color-page-cream);
+  color: var(--color-charcoal-ink);
+}
+
+.filter-pill.active {
+  background-color: var(--color-charcoal-ink);
+  color: var(--color-pure-white);
+  border-color: var(--color-charcoal-ink);
+}
+
+.filter-pill .filter-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-pure-white);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   8. In-Context Notification Toast / Chat Bubble
+   ========================================================================== */
+.chat-bubble-card,
+.ebb-bubble {
+  background-color: var(--color-pure-white);
+  border-radius: var(--radius-cards);
+  border: 1px solid var(--color-linen);
+  box-shadow: 0 4px 16px rgba(45, 44, 43, 0.08);
+  padding: var(--spacing-16) var(--spacing-20);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-12);
+}
+
+.chat-bubble-card .avatar-dot,
+.ebb-bubble .avatar-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--color-plum);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+
+.chat-bubble-card .bubble-author,
+.ebb-bubble .bubble-author {
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-charcoal-ink);
+  margin-bottom: 2px;
+}
+
+.chat-bubble-card .bubble-message,
+.ebb-bubble .bubble-message {
+  font-size: var(--text-body-sm);
+  color: var(--color-graphite);
+  margin: 0;
+}
+
+/* ==========================================================================
+   9. Forms & Inputs
+   ========================================================================== */
+.form-control,
+.form-select {
+  border-radius: var(--radius-inputs) !important;
+  border: 1px solid var(--color-ash) !important;
+  background-color: var(--color-pure-white) !important;
+  color: var(--color-charcoal-ink) !important;
+  padding: 10px 14px !important;
+  font-size: var(--text-body);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control::placeholder {
+  color: var(--color-stone);
+  opacity: 0.7;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-mindful-blue) !important;
+  box-shadow: 0 0 0 3px rgba(0, 97, 239, 0.12) !important;
+  outline: none;
+}
+
+.input-group-text {
+  background-color: var(--color-page-cream) !important;
+  border: 1px solid var(--color-ash) !important;
+  color: var(--color-graphite) !important;
+  border-radius: var(--radius-inputs);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-mindful-blue) !important;
+  border-color: var(--color-mindful-blue) !important;
+}
+
+/* Email Subscribe Inline Group */
+.email-subscribe-group {
+  display: flex;
+  gap: var(--spacing-8);
+  max-width: 520px;
+}
+
+.email-subscribe-group .form-control {
+  flex: 1 1 65%;
+  border-radius: var(--radius-inputs) !important;
+}
+
+.email-subscribe-group .btn {
+  flex: 1 1 35%;
+  border-radius: var(--radius-buttons) !important;
+}
+
+/* ==========================================================================
+   10. Badges & Status Indicators
+   ========================================================================== */
+.badge {
+  border-radius: var(--radius-pills) !important;
+  font-weight: var(--font-weight-medium);
+  padding: 6px 14px;
+  font-size: var(--text-caption);
+  letter-spacing: -0.1px;
+}
+
+.badge.bg-primary {
+  background-color: var(--color-mindful-blue) !important;
+  color: var(--color-pure-white) !important;
+}
+
+.badge.bg-warning {
+  background-color: var(--color-sunbeam-yellow) !important;
+  color: var(--color-charcoal-ink) !important;
+}
+
+.badge.bg-success {
+  background-color: #108548 !important;
+  color: var(--color-pure-white) !important;
+}
+
+.badge.bg-secondary,
+.badge.bg-light {
+  background-color: var(--color-page-cream) !important;
+  color: var(--color-graphite) !important;
+  border: 1px solid var(--color-linen) !important;
+}
+
+.badge.bg-primary-subtle {
+  background-color: rgba(0, 97, 239, 0.1) !important;
+  color: var(--color-mindful-blue) !important;
+  border: 1px solid rgba(0, 97, 239, 0.2) !important;
+}
+
+/* ==========================================================================
+   11. Navigation Pills & Tabs
+   ========================================================================== */
+.nav-pills {
+  background-color: var(--color-page-cream);
+  padding: 6px;
+  border-radius: var(--radius-buttons);
+  border: 1px solid var(--color-linen);
+  gap: var(--spacing-4);
+}
+
+.nav-pills .nav-link {
+  border-radius: var(--radius-buttons);
+  color: var(--color-graphite) !important;
+  font-weight: var(--font-weight-medium);
+  padding: 8px 20px !important;
+  border: none;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--color-charcoal-ink) !important;
+  color: var(--color-pure-white) !important;
+  box-shadow: var(--shadow-subtle);
+}
+
+/* ==========================================================================
+   12. Live Queue Display (Waiting Room TV View)
+   ========================================================================== */
+.queue-display {
+  background-color: var(--color-page-cream) !important;
+}
+
+.queue-number-lg {
+  font-size: 5.5rem;
+  font-weight: 800;
+  color: var(--color-mindful-blue);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.patient-name {
+  font-size: 2rem;
+  color: var(--color-charcoal-ink);
+  font-weight: 700;
+}
+
+.patient-info .info-item {
+  background-color: var(--color-page-cream);
+  padding: 8px 18px;
+  border-radius: var(--radius-buttons);
+  border: 1px solid var(--color-linen);
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-graphite);
+}
+
+/* Subtle pulse animation for active turn */
+@keyframes pulseSubtle {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+.animate-pulse {
+  animation: pulseSubtle 2.5s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   13. Alerts & Notice Panels
+   ========================================================================== */
+.alert {
+  border-radius: var(--radius-cards) !important;
+  border: 1px solid var(--color-linen);
+  padding: var(--spacing-16) var(--spacing-20);
+  font-weight: var(--font-weight-medium);
+}
+
+.alert-success {
+  background-color: #eaf8f0 !important;
+  border-color: #bce9cd !important;
+  color: #0d5f34 !important;
+}
+
+.alert-danger {
+  background-color: #fdf2f2 !important;
+  border-color: #f8c8c8 !important;
+  color: #9b1c1c !important;
+}
+
+.alert-warning {
+  background-color: #fef9e7 !important;
+  border-color: #fcebb8 !important;
+  color: #725000 !important;
+}
+
+.alert-info {
+  background-color: #eef6fd !important;
+  border-color: #c9e4fb !important;
+  color: #0b4f8a !important;
+}
+
+/* ==========================================================================
+   14. Modals & Dialogs
+   ========================================================================== */
 .modal-content {
-    border-radius: 12px;
-    border: none;
+  border-radius: var(--radius-featured) !important;
+  border: 1px solid var(--color-linen) !important;
+  box-shadow: var(--shadow-floating) !important;
+  background-color: var(--color-pure-white);
+  overflow: hidden;
 }
 
-/* Utility Classes */
-.rounded-lg {
-    border-radius: 12px;
+.modal-header {
+  border-bottom: 1px solid var(--color-linen);
+  padding: var(--spacing-20) var(--spacing-24);
+  background-color: var(--color-pure-white);
 }
 
-.shadow-sm {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.modal-body {
+  padding: var(--card-padding);
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .queue-number-lg {
-        font-size: 3rem;
-    }
-    
-    .patient-name {
-        font-size: 1.4rem;
-    }
-    
-    .patient-info {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+.modal-footer {
+  border-top: 1px solid var(--color-linen);
+  padding: var(--spacing-16) var(--spacing-24);
+  background-color: var(--color-page-cream);
+}
+
+/* ==========================================================================
+   15. App Store Badge Button
+   ========================================================================== */
+.app-store-badge {
+  background-color: var(--color-soft-black);
+  color: var(--color-pure-white);
+  border-radius: var(--radius-inputs);
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  font-size: var(--text-body-sm);
+  text-decoration: none;
+  min-width: 140px;
+}
+
+.app-store-badge:hover {
+  background-color: var(--color-charcoal-ink);
+  color: var(--color-pure-white);
+}
+
+/* ==========================================================================
+   16. Tables & Lists
+   ========================================================================== */
+.table {
+  color: var(--color-charcoal-ink);
+  border-color: var(--color-linen);
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: var(--color-page-cream);
+  color: var(--color-graphite);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-body-sm);
+  border-bottom: 1px solid var(--color-linen);
+  padding: var(--spacing-12) var(--spacing-16);
+}
+
+.table td {
+  padding: var(--spacing-12) var(--spacing-16);
+  border-bottom: 1px solid var(--color-linen);
+}
+
+/* ==========================================================================
+   17. Footer & Directory
+   ========================================================================== */
+footer {
+  background-color: var(--color-page-cream) !important;
+  border-top: 1px solid var(--color-linen) !important;
+  color: var(--color-stone) !important;
+  padding-top: var(--spacing-48);
+  padding-bottom: var(--spacing-32);
+}
+
+footer .footer-col-title {
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-charcoal-ink);
+  margin-bottom: var(--spacing-16);
+}
+
+footer .footer-link {
+  font-size: var(--text-body-sm);
+  color: var(--color-stone);
+  text-decoration: none;
+  display: block;
+  margin-bottom: var(--spacing-8);
+  transition: color 0.15s ease;
+}
+
+footer .footer-link:hover {
+  color: var(--color-charcoal-ink);
+}
+
+/* ==========================================================================
+   18. RTL & Spacing Utilities
+   ========================================================================== */
+[dir="rtl"] .ms-auto {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+[dir="rtl"] .me-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+/* Section Rhythm (64px vertical gap) */
+.section-gap {
+  margin-top: var(--section-gap);
+  margin-bottom: var(--section-gap);
 }

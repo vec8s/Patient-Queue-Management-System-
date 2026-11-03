@@ -1,0 +1,69 @@
+{
+  "id": "pqs-env-001",
+  "name": "PQS Local Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "doctor_token",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "admin_email",
+      "value": "admin@clinic.local",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "admin_password",
+      "value": "Admin@123",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "doctor_email",
+      "value": "doctor@clinic.local",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "doctor_password",
+      "value": "Doctor@123",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "patient_id",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "appointment_ref",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "queue_number",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-11-03T23:00:00.000Z",
+  "_postman_exported_using": "Postman/11.0.0"
+}

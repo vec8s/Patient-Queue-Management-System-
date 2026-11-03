@@ -1,0 +1,35 @@
+# Composer
+/vendor/
+composer.phar
+
+# Environment files
+.env
+.env.backup
+.env.*.local
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+nbproject/
+
+# Logs & Temp files
+*.log
+/logs/
+/tmp/
+
+# Database dumps containing sensitive data
+/database/dumps/
+*.sql.gz
+

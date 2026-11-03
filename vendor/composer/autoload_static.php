@@ -7,14 +7,22 @@ namespace Composer\Autoload;
 class ComposerStaticInit6a6677b266480403b2d0a79002f4e919
 {
     public static $prefixLengthsPsr4 = array (
-        'F' => 
+        'P' =>
+        array (
+            'PQS\\' => 4,
+        ),
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Firebase\\JWT\\' => 
+        'PQS\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
@@ -22,6 +30,21 @@ class ComposerStaticInit6a6677b266480403b2d0a79002f4e919
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
+        'Firebase\\JWT\\CachedKeySet' => __DIR__ . '/..' . '/firebase/php-jwt/src/CachedKeySet.php',
+        'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWK' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWK.php',
+        'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
+        'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
+        'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
+        'PQS\\Auth\\AuthGuard' => __DIR__ . '/../..' . '/src/Auth/AuthGuard.php',
+        'PQS\\Auth\\JWTService' => __DIR__ . '/../..' . '/src/Auth/JWTService.php',
+        'PQS\\Database\\Database' => __DIR__ . '/../..' . '/src/Database/Database.php',
+        'PQS\\Services\\AppointmentService' => __DIR__ . '/../..' . '/src/Services/AppointmentService.php',
+        'PQS\\Services\\PatientService' => __DIR__ . '/../..' . '/src/Services/PatientService.php',
+        'PQS\\Services\\QueueService' => __DIR__ . '/../..' . '/src/Services/QueueService.php',
+        'PQS\\Utils\\Config' => __DIR__ . '/../..' . '/src/Utils/Config.php',
+        'PQS\\Utils\\Response' => __DIR__ . '/../..' . '/src/Utils/Response.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

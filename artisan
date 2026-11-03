@@ -1,0 +1,180 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Patient Queue Management System (PQS) CLI
+ * Artisan-compatible Command Line Tool
+ */
+
+declare(strict_types=1);
+
+set_time_limit(0);
+
+define('PQS_START', microtime(true));
+define('PQS_VERSION', '3.0.0');
+
+// Parse arguments
+$args = array_slice($argv, 1);
+$command = $args[0] ?? 'list';
+
+// ANSI terminal color detection
+$hasAnsi = (DIRECTORY_SEPARATOR !== '\\') ||
+    (getenv('TERM') !== false) ||
+    (getenv('ANSICON') !== false) ||
+    (getenv('ConEmuANSI') === 'ON') ||
+    (getenv('WT_SESSION') !== null) ||
+    (function_exists('sapi_windows_vt100_support') && @sapi_windows_vt100_support(STDOUT));
+
+function color(string $text, string $colorCode): string {
+    global $hasAnsi;
+    if (!$hasAnsi) {
+        return $text;
+    }
+    return "\033[" . $colorCode . "m" . $text . "\033[0m";
+}
+
+function info(string $text): void {
+    echo color("  INFO  ", "42;30") . " " . $text . PHP_EOL . PHP_EOL;
+}
+
+function warn(string $text): void {
+    echo color("  WARN  ", "43;30") . " " . $text . PHP_EOL . PHP_EOL;
+}
+
+function error(string $text): void {
+    echo color("  FAIL  ", "41;37") . " " . $text . PHP_EOL . PHP_EOL;
+}
+
+function printBanner(): void {
+    echo color("   ____  ____  __  ________", "36") . PHP_EOL;
+    echo color("  / __ \/ __ \/  |/  / ___/", "36") . "  " . color("Patient Queue Management System", "1;37") . PHP_EOL;
+    echo color(" / /_/ / /_/ / /|_/ /\__ \ ", "36") . "  " . color("Artisan CLI v" . PQS_VERSION, "90") . PHP_EOL;
+    echo color("/ ____/\___\_\_/  /_/____/ ", "36") . PHP_EOL;
+    echo color("/_/                        ", "36") . PHP_EOL . PHP_EOL;
+}
+
+function isPortAvailable(string $host, int $port): bool {
+    $connection = @fsockopen($host, $port, $errno, $errstr, 0.5);
+    if (is_resource($connection)) {
+        fclose($connection);
+        return false;
+    }
+    return true;
+}
+
+switch (strtolower($command)) {
+    case 'serve':
+    case 'server':
+        $host = '127.0.0.1';
+        $port = 8000;
+        $maxTries = 10;
+
+        foreach ($args as $arg) {
+            if (str_starts_with($arg, '--host=')) {
+                $host = substr($arg, 7);
+            } elseif (str_starts_with($arg, '--port=')) {
+                $port = (int) substr($arg, 7);
+            } elseif (str_starts_with($arg, '--tries=')) {
+                $maxTries = (int) substr($arg, 8);
+            } elseif (is_numeric($arg)) {
+                $port = (int) $arg;
+            }
+        }
+
+        $initialPort = $port;
+        $tried = 0;
+        while (!isPortAvailable($host, $port) && $tried < $maxTries) {
+            $port++;
+            $tried++;
+        }
+
+        printBanner();
+
+        if ($port !== $initialPort) {
+            warn("Port {$initialPort} is already in use. Switched to port {$port}.");
+        }
+
+        $url = "http://{$host}:{$port}";
+        info("Server running on [{$url}].");
+        echo color("  Press Ctrl+C to stop the server", "90") . PHP_EOL . PHP_EOL;
+
+        $docroot = __DIR__;
+        $router = __DIR__ . DIRECTORY_SEPARATOR . 'server.php';
+        $phpBinary = PHP_BINARY ?: 'php';
+
+        $cmd = sprintf(
+            '%s -S %s:%d -t %s %s',
+            escapeshellarg($phpBinary),
+            $host,
+            $port,
+            escapeshellarg($docroot),
+            escapeshellarg($router)
+        );
+
+        passthru($cmd);
+        break;
+
+    case 'migrate':
+    case 'migrate:refresh':
+        printBanner();
+        info("Running database migration...");
+        $migrationFile = __DIR__ . '/database/migration.php';
+        if (!file_exists($migrationFile)) {
+            error("Migration script not found at {$migrationFile}");
+            exit(1);
+        }
+        $phpBinary = PHP_BINARY ?: 'php';
+        passthru(sprintf('%s %s', escapeshellarg($phpBinary), escapeshellarg($migrationFile)));
+        break;
+
+    case 'key:generate':
+        printBanner();
+        $envFile = __DIR__ . '/.env';
+        if (!file_exists($envFile)) {
+            $envExample = __DIR__ . '/.env.example';
+            if (file_exists($envExample)) {
+                copy($envExample, $envFile);
+            } else {
+                file_put_contents($envFile, "");
+            }
+        }
+
+        $newKey = bin2hex(random_bytes(32));
+        $content = file_get_contents($envFile);
+
+        if (str_contains($content, 'JWT_SECRET=')) {
+            $content = preg_replace('/^JWT_SECRET=.*$/m', "JWT_SECRET=\"{$newKey}\"", $content);
+        } else {
+            $content .= PHP_EOL . "JWT_SECRET=\"{$newKey}\"" . PHP_EOL;
+        }
+
+        file_put_contents($envFile, $content);
+        info("Application key [{$newKey}] set successfully in .env.");
+        break;
+
+    case '-v':
+    case '--version':
+    case 'version':
+        echo "PQS Artisan CLI version " . PQS_VERSION . " (PHP " . PHP_VERSION . ")" . PHP_EOL;
+        break;
+
+    case 'help':
+    case 'list':
+    default:
+        printBanner();
+        echo color("Usage:", "33") . PHP_EOL;
+        echo "  command [options] [arguments]" . PHP_EOL . PHP_EOL;
+
+        echo color("Available commands:", "33") . PHP_EOL;
+        echo "  " . color("serve", "32") . " / " . color("server", "32") . "   Start the local PHP development server (e.g. php artisan server)" . PHP_EOL;
+        echo "  " . color("migrate", "32") . "            Run database migrations and seed schema" . PHP_EOL;
+        echo "  " . color("key:generate", "32") . "       Generate and save a new secure application key (JWT_SECRET)" . PHP_EOL;
+        echo "  " . color("version", "32") . "            Display the application CLI version" . PHP_EOL;
+        echo "  " . color("help", "32") . "               Display this help message" . PHP_EOL . PHP_EOL;
+
+        echo color("Options for serve/server:", "33") . PHP_EOL;
+        echo "  --host=127.0.0.1  The host address to serve the application on" . PHP_EOL;
+        echo "  --port=8000       The port to serve the application on" . PHP_EOL;
+        echo "  --tries=10        The max number of ports to attempt if the initial port is busy" . PHP_EOL;
+        break;
+}

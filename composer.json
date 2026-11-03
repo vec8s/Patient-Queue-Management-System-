@@ -1,0 +1,25 @@
+{
+    "name": "clinic/patient-queue-system",
+    "description": "Patient Queue Management System (PQS) - PSR-4 Architecture",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "firebase/php-jwt": "^6.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "PQS\\": "src/"
+        }
+    },
+    "scripts": {
+        "serve": "php artisan serve",
+        "server": "php artisan server",
+        "migrate": "php artisan migrate"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

@@ -7,4 +7,19 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Firebase\\JWT\\BeforeValidException' => $vendorDir . '/firebase/php-jwt/src/BeforeValidException.php',
+    'Firebase\\JWT\\CachedKeySet' => $vendorDir . '/firebase/php-jwt/src/CachedKeySet.php',
+    'Firebase\\JWT\\ExpiredException' => $vendorDir . '/firebase/php-jwt/src/ExpiredException.php',
+    'Firebase\\JWT\\JWK' => $vendorDir . '/firebase/php-jwt/src/JWK.php',
+    'Firebase\\JWT\\JWT' => $vendorDir . '/firebase/php-jwt/src/JWT.php',
+    'Firebase\\JWT\\Key' => $vendorDir . '/firebase/php-jwt/src/Key.php',
+    'Firebase\\JWT\\SignatureInvalidException' => $vendorDir . '/firebase/php-jwt/src/SignatureInvalidException.php',
+    'PQS\\Auth\\AuthGuard' => $baseDir . '/src/Auth/AuthGuard.php',
+    'PQS\\Auth\\JWTService' => $baseDir . '/src/Auth/JWTService.php',
+    'PQS\\Database\\Database' => $baseDir . '/src/Database/Database.php',
+    'PQS\\Services\\AppointmentService' => $baseDir . '/src/Services/AppointmentService.php',
+    'PQS\\Services\\PatientService' => $baseDir . '/src/Services/PatientService.php',
+    'PQS\\Services\\QueueService' => $baseDir . '/src/Services/QueueService.php',
+    'PQS\\Utils\\Config' => $baseDir . '/src/Utils/Config.php',
+    'PQS\\Utils\\Response' => $baseDir . '/src/Utils/Response.php',
 );

@@ -1,0 +1,801 @@
+{
+  "info": {
+    "_postman_id": "pqs-collection-v1",
+    "name": "Patient Queue Management System (PQS) API",
+    "description": "Comprehensive automated testing & inspection collection for PQS (Patient Queue Management System).\n\nIncludes:\n- 01. Authentication & Staff Management (RBAC JWT)\n- 02. Patients Management (Register & Search)\n- 03. Appointments Management (Booking & Lookup)\n- 04. Queue & TV Display Management (Live Queue, Walk-in, Consultation Flow)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Authentication & Staff",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response returns success status and JWT token\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data).to.be.an(\"object\");",
+                  "    pm.expect(jsonData.data.token).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set(\"token\", jsonData.data.token);",
+                  "    console.log(\"Saved Admin token to environment variable: token\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"login\",\n    \"email\": \"{{admin_email}}\",\n    \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php?action=login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            },
+            "description": "Authenticates as Admin and automatically extracts JWT token into {{token}}."
+          }
+        },
+        {
+          "name": "Doctor Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Doctor login returns token\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.token).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set(\"doctor_token\", jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"login\",\n    \"email\": \"{{doctor_email}}\",\n    \"password\": \"{{doctor_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php?action=login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            },
+            "description": "Authenticates as Doctor and stores token in {{doctor_token}}."
+          }
+        },
+        {
+          "name": "Verify Current Session (Me)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Current user session is active\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.user).to.be.an(\"object\");",
+                  "    pm.expect(jsonData.data.user.email).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"]
+            },
+            "description": "Validates the current JWT Bearer token and returns authenticated staff identity."
+          }
+        },
+        {
+          "name": "Register New Staff (Admin Only)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var randomSuffix = Math.floor(1000 + Math.random() * 9000);",
+                  "pm.environment.set(\"new_staff_email\", \"nurse_\" + randomSuffix + \"@clinic.local\");"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Staff created successfully by Admin\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.staff_id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"register\",\n    \"firstName\": \"مريم\",\n    \"lastName\": \"السالم\",\n    \"email\": \"{{new_staff_email}}\",\n    \"password\": \"Nurse@123\",\n    \"role\": \"nurse\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php?action=register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "register"
+                }
+              ]
+            },
+            "description": "Creates a new staff member. Requires Admin Bearer token."
+          }
+        },
+        {
+          "name": "Invalid Login Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Returns fail status\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"fail\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"login\",\n    \"email\": \"wrong_user@clinic.local\",\n    \"password\": \"IncorrectPassword999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php?action=login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            },
+            "description": "Verifies that incorrect credentials trigger 401 Unauthorized."
+          }
+        },
+        {
+          "name": "Logout Staff",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Logout successful\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"logout\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth.php?action=logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "logout"
+                }
+              ]
+            },
+            "description": "Clears authentication cookies and session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Patients Management",
+      "item": [
+        {
+          "name": "Register New Patient",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var randomNatId = \"10\" + Math.floor(10000000 + Math.random() * 90000000);",
+                  "var randomPhone = \"05\" + Math.floor(10000000 + Math.random() * 90000000);",
+                  "pm.environment.set(\"test_national_id\", randomNatId);",
+                  "pm.environment.set(\"test_phone\", randomPhone);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Patient registered with valid ID\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.patient_id).to.be.above(0);",
+                  "});",
+                  "",
+                  "if (jsonData.data && jsonData.data.patient_id) {",
+                  "    pm.environment.set(\"patient_id\", jsonData.data.patient_id);",
+                  "    console.log(\"Saved patient_id to environment:\", jsonData.data.patient_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"national_id\": \"{{test_national_id}}\",\n    \"first_name\": \"سلطان\",\n    \"last_name\": \"العتيبي\",\n    \"phone\": \"{{test_phone}}\",\n    \"gender\": \"male\",\n    \"dob\": \"1992-04-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients.php"]
+            },
+            "description": "Registers a new patient and saves patient_id to environment."
+          }
+        },
+        {
+          "name": "Search Patients by Name or Phone",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Search returned patients array\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.patients).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients.php?search=سلطان&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients.php"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "سلطان"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Performs full-text search across patients by name or phone number."
+          }
+        },
+        {
+          "name": "Search Patients by National ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Returns list containing registered patient\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.patients).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients.php?search={{test_national_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients.php"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "{{test_national_id}}"
+                }
+              ]
+            },
+            "description": "Finds a patient record specifically by their National ID / Iqama."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Appointments Management",
+      "item": [
+        {
+          "name": "Book New Appointment",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var tomorrow = new Date();",
+                  "tomorrow.setDate(tomorrow.getDate() + 1);",
+                  "var dateStr = tomorrow.toISOString().split('T')[0];",
+                  "pm.environment.set(\"test_appt_date\", dateStr);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Appointment booked with reference number\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    var ref = jsonData.data.appointmentID || (jsonData.data.appointment && jsonData.data.appointment.reference_number);",
+                  "    pm.expect(ref).to.be.a(\"string\");",
+                  "    pm.environment.set(\"appointment_ref\", ref);",
+                  "    console.log(\"Saved appointment_ref:\", ref);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"patient_id\": \"{{patient_id}}\",\n    \"doctor_id\": 2,\n    \"appointment_date\": \"{{test_appt_date}}\",\n    \"appointment_time\": \"11:00:00\",\n    \"notes\": \"استشارة طبية وفحص دوري\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/appointments.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "appointments.php"]
+            },
+            "description": "Books a scheduled appointment and saves the generated reference number to {{appointment_ref}}."
+          }
+        },
+        {
+          "name": "Lookup Appointment by Reference Number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Appointment details matched reference\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.appointment).to.be.an(\"object\");",
+                  "    pm.expect(jsonData.data.appointment.reference_number).to.eql(pm.environment.get(\"appointment_ref\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/appointments.php?appointmentID={{appointment_ref}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "appointments.php"],
+              "query": [
+                {
+                  "key": "appointmentID",
+                  "value": "{{appointment_ref}}"
+                }
+              ]
+            },
+            "description": "Retrieves appointment details and patient info using the reference code."
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Queue Management & TV Screen",
+      "item": [
+        {
+          "name": "Get Live Queue State",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Live queue list returned as array\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.queue).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Polls the live queue tickets for waiting room TV and clinic screens."
+          }
+        },
+        {
+          "name": "Walk-in Patient Check-in",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Walk-in ticket generated\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.queue_number).to.be.a(\"string\");",
+                  "    pm.environment.set(\"queue_number\", jsonData.data.queue_number);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"walk-in\",\n    \"patientId\": \"{{patient_id}}\",\n    \"appointmentType\": 1,\n    \"additionalinfo\": \"حضور مباشر كشف عام\",\n    \"termsAgreement\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Performs immediate walk-in reception check-in and generates a new queue ticket number."
+          }
+        },
+        {
+          "name": "Check-in Scheduled Appointment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Scheduled appointment checked into queue\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.queue_number).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"appointmentId\": \"{{appointment_ref}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Converts an existing scheduled appointment into an active queue ticket upon patient arrival."
+          }
+        },
+        {
+          "name": "Doctor Call Patient to Clinic Room",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or handles state\", function () {",
+                  "    pm.expect([200, 400, 500]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (pm.response.code === 200) {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"queueId\": 1,\n    \"doctorId\": 2,\n    \"roomNumber\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Called by doctor to summon a waiting patient to a specific clinic examination room."
+          }
+        },
+        {
+          "name": "Doctor Complete Consultation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or handles state\", function () {",
+                  "    pm.expect([200, 400, 500]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (pm.response.code === 200) {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"completeQueueId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Completes the patient visit and removes them from the active queue."
+          }
+        },
+        {
+          "name": "Auto Complete Stale Queue Entries",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Returns success\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"auto\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/queue.php",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "queue.php"]
+            },
+            "description": "Background maintenance endpoint that marks abandoned or stale tickets as completed."
+          }
+        }
+      ]
+    }
+  ]
+}
